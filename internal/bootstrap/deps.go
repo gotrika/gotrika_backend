@@ -2,11 +2,14 @@ package bootstrap
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gotrika/gotrika_backend/internal/config"
 	"github.com/gotrika/gotrika_backend/internal/repository"
 	"github.com/gotrika/gotrika_backend/internal/service"
+	"github.com/gotrika/gotrika_backend/pkg/auth"
 	"github.com/gotrika/gotrika_backend/pkg/database"
+	"github.com/gotrika/gotrika_backend/pkg/hash"
 	"github.com/gotrika/gotrika_backend/pkg/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -43,8 +46,20 @@ func InitDependencies() (*Dependencies, error) {
 	db := mongoClient.Database(cfg.MongoConfig.DBName)
 	// Services & Repos
 	repos := repository.NewRepositories(db)
+	hasher := hash.NewScryptHasher(cfg.SecretKey)
+	tokenManager, err := auth.NewManager(
+		cfg.SecretKey,
+		time.Duration(cfg.AccessTTL)*time.Second,
+		time.Duration(cfg.RefreshTTL)*time.Second,
+	)
+	if err != nil {
+		logger.Error(err)
+		return nil, err
+	}
 	services := service.NewServices(service.Dependencies{
-		Repos: repos,
+		Repos:        repos,
+		Hasher:       hasher,
+		TokenManager: tokenManager,
 	})
 	return &Dependencies{
 		cfg:         cfg,

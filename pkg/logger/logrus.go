@@ -39,5 +39,5 @@ func Errorf(format string, args ...interface{}) {
 }
 
 func Fatal(args ...interface{}) {
-	logrus.Fatal(args)
+	logrus.Fatal(args...)
 }

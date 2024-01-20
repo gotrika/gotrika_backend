@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gotrika/gotrika_backend/internal/config"
 	"github.com/gotrika/gotrika_backend/internal/service"
+	"github.com/gotrika/gotrika_backend/internal/transport/http/handler/api"
 )
 
 type Handler struct {
@@ -29,5 +30,7 @@ func (h *Handler) Init(cfg *config.Config) *gin.Engine {
 	router.GET("/ping/", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
+	apiHandler := api.NewAPIHandler(h.services)
+	apiHandler.Init(router)
 	return router
 }
