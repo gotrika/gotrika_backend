@@ -10,6 +10,8 @@ import (
 type Config struct {
 	Debug      bool   `env:"DEBUG" env-default:"false"`
 	SecretKey  string `env:"SECRET_KEY" env-required:"true"`
+	AccessTTL  int    `env:"ACCESS_TTL" env-default:"3600"`     // in seconds
+	RefreshTTL int    `env:"REFRESH_TTL" env-default:"2592000"` // in seconds
 	HTTPConfig struct {
 		Port string `env:"PORT" env-default:"8000"`
 	}
