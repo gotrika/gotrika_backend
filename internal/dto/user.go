@@ -1,10 +1,10 @@
 package dto
 
 type RegisterUserDTO struct {
-	Username  string `json:"username"`
-	Name      string `json:"name"`
-	Password1 string `json:"password1"`
-	Password2 string `json:"password2"`
+	Username  string `json:"username" binding:"required"`
+	Name      string `json:"name" binding:"required"`
+	Password1 string `json:"password1" binding:"required"`
+	Password2 string `json:"password2" binding:"required"`
 }
 
 type CreateUserDTO struct {

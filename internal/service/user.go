@@ -46,6 +46,7 @@ func (s *UserService) SignUp(ctx context.Context, input dto.RegisterUserDTO) (st
 		Username:       input.Username,
 		HashedPassword: hashPassword,
 		Name:           input.Name,
+		IsActive:       true,
 	}
 	userID, err := s.repo.CreateUser(ctx, &userDTO)
 	if err != nil {

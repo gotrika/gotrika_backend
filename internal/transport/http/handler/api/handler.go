@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gotrika/gotrika_backend/internal/service"
@@ -21,6 +22,15 @@ func NewAPIHandler(services *service.Services) *APIHandler {
 func (h *APIHandler) Init(router *gin.Engine) {
 	api := router.Group("/api")
 	h.initUsersHandlers(api)
+	h.initSitesHandlers(api)
+}
+
+func converIDtoObjectId(idParam string) (primitive.ObjectID, error) {
+	id, err := primitive.ObjectIDFromHex(idParam)
+	if err != nil {
+		return primitive.ObjectID{}, errors.New("invalid id param")
+	}
+	return id, nil
 }
 
 func parseIdFromPath(c *gin.Context, param string) (primitive.ObjectID, error) {
@@ -29,10 +39,20 @@ func parseIdFromPath(c *gin.Context, param string) (primitive.ObjectID, error) {
 		return primitive.ObjectID{}, errors.New("empty id param")
 	}
 
-	id, err := primitive.ObjectIDFromHex(idParam)
-	if err != nil {
-		return primitive.ObjectID{}, errors.New("invalid id param")
-	}
+	return converIDtoObjectId(idParam)
+}
 
-	return id, nil
+func getLimitOffsetFromQueryParams(c *gin.Context) (int, int) {
+	limitParam := c.DefaultQuery("limit", "100")
+	offsetParam := c.DefaultQuery("offset", "0")
+	limit, err := strconv.Atoi(limitParam)
+	if err != nil {
+		return 100, 0
+	}
+	offset, err := strconv.Atoi(offsetParam)
+	if err != nil {
+		return 100, 0
+	}
+	return limit, offset
+
 }

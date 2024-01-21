@@ -12,6 +12,7 @@ import (
 const (
 	authorizationHeader = "Authorization"
 	userIDCtx           = "userID"
+	userIsAdminCtx      = "userIsAdmin"
 )
 
 func extractAuthToken(header string) (string, error) {
@@ -45,10 +46,16 @@ func authMiddleware(userService service.Users) gin.HandlerFunc {
 			})
 			return
 		}
-		_, userSign, err := userService.GetUserByID(c, userID)
+		user, userSign, err := userService.GetUserByID(c, userID)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response{
 				Message: err.Error(),
+			})
+			return
+		}
+		if !user.IsActive {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response{
+				Message: "user not active",
 			})
 			return
 		}
@@ -58,7 +65,8 @@ func authMiddleware(userService service.Users) gin.HandlerFunc {
 			})
 			return
 		}
-		c.Set(userIDCtx, userID)
+		c.Set(userIDCtx, user.ID)
+		c.Set(userIsAdminCtx, user.IsAdmin)
 		c.Next()
 
 	}
