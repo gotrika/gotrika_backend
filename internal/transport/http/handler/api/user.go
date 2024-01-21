@@ -12,10 +12,12 @@ func (h *APIHandler) initUsersHandlers(api *gin.RouterGroup) {
 	{
 		auth.POST("/sign-up/", h.userSignUp)
 		auth.POST("/sign-in/", h.userSignIn)
+		auth.POST("/refresh/", h.userUpdateTokens)
 	}
 	users := api.Group("users", authMiddleware(h.services.Users))
 	{
-		users.GET("/:user_id/", h.getUser)
+		users.GET("/me/", h.userMe)
+		users.GET("/:user_id/", h.userGet)
 	}
 
 }
@@ -49,13 +51,37 @@ func (h *APIHandler) userSignIn(c *gin.Context) {
 	c.JSON(http.StatusOK, &authResponse)
 }
 
-func (h *APIHandler) getUser(c *gin.Context) {
+func (h *APIHandler) userUpdateTokens(c *gin.Context) {
+	refreshToken := c.DefaultQuery("token", "")
+	if refreshToken == "" {
+		newResponse(c, http.StatusForbidden, "miss refresh token")
+		return
+	}
+	authResponse, err := h.services.Users.UpdateTokens(c.Request.Context(), refreshToken)
+	if err != nil {
+		newResponse(c, http.StatusForbidden, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, &authResponse)
+}
+
+func (h *APIHandler) userGet(c *gin.Context) {
 	userID, err := parseIdFromPath(c, "user_id")
 	if err != nil {
 		newResponse(c, http.StatusBadRequest, "invalid user_id")
 		return
 	}
 	user, _, err := h.services.Users.GetUserByID(c.Request.Context(), userID.Hex())
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, &user)
+}
+
+func (h *APIHandler) userMe(c *gin.Context) {
+	userID := c.GetString(userIDCtx)
+	user, _, err := h.services.Users.GetUserByID(c.Request.Context(), userID)
 	if err != nil {
 		newResponse(c, http.StatusBadRequest, err.Error())
 		return

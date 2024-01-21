@@ -95,3 +95,32 @@ func (s *UserService) GetUserByID(ctx context.Context, userID string) (*dto.User
 	}
 	return &userDTO, user.Sign, nil
 }
+
+func (s *UserService) UpdateTokens(ctx context.Context, refreshToken string) (*dto.AuthResponse, error) {
+	userID, sign, err := s.tokenManager.Parse(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+	user, err := s.repo.GetUserById(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	if !user.IsActive {
+		return nil, errors.New("user inactive")
+	}
+	if sign != user.Sign {
+		return nil, errors.New("invalid signature")
+	}
+	tokens, err := s.tokenManager.GenerateTokens(user.ID.Hex(), user.Sign)
+	if err != nil {
+		return nil, err
+	}
+	resp := dto.AuthResponse{
+		ID:           tokens.UserID,
+		AccessToken:  tokens.AccessToken,
+		RefreshToken: tokens.RefreshToken,
+		Expires:      tokens.Expires,
+		ExpiresAt:    tokens.ExpiresAt,
+	}
+	return &resp, nil
+}

@@ -14,6 +14,7 @@ type Users interface {
 	SignUp(ctx context.Context, input dto.RegisterUserDTO) (string, error)
 	SignIn(ctx context.Context, input dto.AuthUserDTO) (*dto.AuthResponse, error)
 	GetUserByID(ctx context.Context, userID string) (*dto.UserRetrieveDTO, string, error)
+	UpdateTokens(ctx context.Context, refreshToken string) (*dto.AuthResponse, error)
 	TokenManager() auth.TokenManager
 }
 
