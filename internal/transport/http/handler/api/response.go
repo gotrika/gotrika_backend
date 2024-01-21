@@ -5,11 +5,6 @@ import (
 	"github.com/gotrika/gotrika_backend/pkg/logger"
 )
 
-type dataResponse struct {
-	Count int         `json:"count"`
-	Data  interface{} `json:"data"`
-}
-
 type idResponse struct {
 	ID interface{} `json:"id"`
 }

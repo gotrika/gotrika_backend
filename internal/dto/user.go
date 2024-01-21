@@ -16,8 +16,8 @@ type CreateUserDTO struct {
 }
 
 type AuthUserDTO struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `form:"username" json:"username"`
+	Password string `form:"password" json:"password"`
 }
 
 type AuthResponse struct {
@@ -34,4 +34,8 @@ type UserRetrieveDTO struct {
 	Name     string `json:"name"`
 	IsActive bool   `json:"is_active"`
 	IsAdmin  bool   `json:"is_admin"`
+}
+
+type UpdateTokensByRefreshToken struct {
+	RefreshToken string `json:"refresh_token"`
 }

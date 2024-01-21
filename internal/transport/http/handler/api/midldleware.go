@@ -24,7 +24,7 @@ func extractAuthToken(header string) (string, error) {
 	if len(jwtToken) != 2 {
 		return "", errors.New("incorrectly formatted authorization header")
 	}
-	if strings.ToLower(jwtToken[0]) != "jwt" {
+	if strings.ToLower(jwtToken[0]) != "jwt" && strings.ToLower(jwtToken[0]) != "bearer" {
 		return "", errors.New("incorrectly formatted authorization header param")
 	}
 	return jwtToken[1], nil

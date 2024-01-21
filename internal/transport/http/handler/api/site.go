@@ -8,6 +8,11 @@ import (
 	"github.com/gotrika/gotrika_backend/internal/dto"
 )
 
+type sitesResponse struct {
+	Count int                    `json:"count"`
+	Data  []*dto.SiteRetrieveDTO `json:"data"`
+}
+
 func (h *APIHandler) initSitesHandlers(api *gin.RouterGroup) {
 	sites := api.Group("/sites", authMiddleware(h.services.Users))
 	{
@@ -19,6 +24,19 @@ func (h *APIHandler) initSitesHandlers(api *gin.RouterGroup) {
 	}
 }
 
+// @Summary Add Site
+// @Tags sites
+// @Description add site
+// @ModuleID sites
+// @Security ApiAuth
+// @Accept  json
+// @Produce  json
+// @Param input body dto.CreateSiteDTO true "site info"
+// @Success 200 {object} dto.SiteRetrieveDTO
+// @Failure 400,404 {object} response
+// @Failure 500 {object} response
+// @Failure default {object} response
+// @Router /api/sites/ [post]
 func (h *APIHandler) sitesCreate(c *gin.Context) {
 	var inp dto.CreateSiteDTO
 	if err := c.BindJSON(&inp); err != nil {
@@ -35,6 +53,18 @@ func (h *APIHandler) sitesCreate(c *gin.Context) {
 	c.JSON(http.StatusOK, &resp)
 }
 
+// @Summary Site Info
+// @Security ApiAuth
+// @Tags sites
+// @Description site info
+// @Accept  json
+// @Produce  json
+// @Param site_id path string true "site id"
+// @Success 200 {object} dto.SiteRetrieveDTO
+// @Failure 400,403 {object} response
+// @Failure 500 {object} response
+// @Failure default {object} response
+// @Router /api/sites/{site_id}/ [get]
 func (h *APIHandler) sitesGet(c *gin.Context) {
 	siteID, err := parseIdFromPath(c, "site_id")
 	if err != nil {
@@ -52,6 +82,18 @@ func (h *APIHandler) sitesGet(c *gin.Context) {
 	c.JSON(http.StatusOK, &siteRetrieve)
 }
 
+// @Summary Delete site
+// @Security ApiAuth
+// @Tags sites
+// @Description delete site
+// @Accept  json
+// @Produce  json
+// @Param site_id path string true "site id"
+// @Success 204
+// @Failure 400,403 {object} response
+// @Failure 500 {object} response
+// @Failure default {object} response
+// @Router /api/sites/{site_id}/ [delete]
 func (h *APIHandler) siteDelete(c *gin.Context) {
 	siteID, err := parseIdFromPath(c, "site_id")
 	if err != nil {
@@ -69,6 +111,20 @@ func (h *APIHandler) siteDelete(c *gin.Context) {
 	c.JSON(http.StatusNoContent, nil)
 }
 
+// @Summary List of sites
+// @Security ApiAuth
+// @Tags sites
+// @Description list of sites
+// @Accept  json
+// @Produce  json
+// @Param offset query int false "offset" default(0)
+// @Param limit query int false "limit" default(100)
+// @Param search query string false "search"
+// @Success 200 {object} sitesResponse
+// @Failure 400,404 {object} response
+// @Failure 500 {object} response
+// @Failure default {object} response
+// @Router /api/sites/ [get]
 func (s *APIHandler) siteList(c *gin.Context) {
 	queryParams := c.Request.URL.Query()
 	search := queryParams.Get("search")
@@ -88,9 +144,22 @@ func (s *APIHandler) siteList(c *gin.Context) {
 		newResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, dataResponse{Data: data, Count: count})
+	c.JSON(http.StatusOK, sitesResponse{Data: data, Count: count})
 }
 
+// @Summary Update Site
+// @Security ApiAuth
+// @Tags sites
+// @Description update site
+// @Accept  json
+// @Produce  json
+// @Param site_id path string true "site id"
+// @Param input body dto.UpdateSiteDTO true "site info"
+// @Success 200 {object} dto.SiteRetrieveDTO
+// @Failure 400,403 {object} response
+// @Failure 500 {object} response
+// @Failure default {object} response
+// @Router /api/sites/{site_id}/ [put]
 func (s *APIHandler) siteUpdate(c *gin.Context) {
 	siteID, err := parseIdFromPath(c, "site_id")
 	if err != nil {

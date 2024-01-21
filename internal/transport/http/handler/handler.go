@@ -4,9 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/gotrika/gotrika_backend/docs"
 	"github.com/gotrika/gotrika_backend/internal/config"
 	"github.com/gotrika/gotrika_backend/internal/service"
 	"github.com/gotrika/gotrika_backend/internal/transport/http/handler/api"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
@@ -26,7 +29,7 @@ func (h *Handler) Init(cfg *config.Config) *gin.Engine {
 		gin.Logger(),
 		corsMiddleware,
 	)
-
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/ping/", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})

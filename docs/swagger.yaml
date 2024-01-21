@@ -1,0 +1,515 @@
+definitions:
+  api.idResponse:
+    properties:
+      id: {}
+    type: object
+  api.response:
+    properties:
+      message:
+        type: string
+    type: object
+  api.sitesResponse:
+    properties:
+      count:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/dto.SiteRetrieveDTO'
+        type: array
+    type: object
+  dto.AuthResponse:
+    properties:
+      access_token:
+        type: string
+      expires:
+        type: integer
+      expires_at:
+        type: integer
+      id:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  dto.AuthUserDTO:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.CreateSiteDTO:
+    properties:
+      counter_code:
+        type: string
+      name:
+        type: string
+      url:
+        type: string
+    required:
+    - name
+    - url
+    type: object
+  dto.RegisterUserDTO:
+    properties:
+      name:
+        type: string
+      password1:
+        type: string
+      password2:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password1
+    - password2
+    - username
+    type: object
+  dto.SiteRetrieveDTO:
+    properties:
+      access_users:
+        items:
+          type: string
+        type: array
+      counter_code:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: string
+      url:
+        type: string
+    type: object
+  dto.UpdateSiteDTO:
+    properties:
+      access_users:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      url:
+        type: string
+    type: object
+  dto.UpdateTokensByRefreshToken:
+    properties:
+      refresh_token:
+        type: string
+    type: object
+  dto.UserRetrieveDTO:
+    properties:
+      id:
+        type: string
+      is_active:
+        type: boolean
+      is_admin:
+        type: boolean
+      name:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/auth/refresh/:
+    post:
+      consumes:
+      - application/json
+      description: user updates tokens
+      parameters:
+      - description: sign up info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateTokensByRefreshToken'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      summary: User Updates Tokens
+      tags:
+      - auth
+  /api/auth/sign-in/:
+    post:
+      consumes:
+      - application/json
+      description: user sign in
+      parameters:
+      - description: sign up info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthUserDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      summary: User Sign In
+      tags:
+      - auth
+  /api/auth/sign-up/:
+    post:
+      consumes:
+      - application/json
+      description: create user account
+      parameters:
+      - description: sign up info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterUserDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/api.idResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      summary: User Sign Up
+      tags:
+      - auth
+  /api/sites/:
+    get:
+      consumes:
+      - application/json
+      description: list of sites
+      parameters:
+      - default: 0
+        description: offset
+        in: query
+        name: offset
+        type: integer
+      - default: 100
+        description: limit
+        in: query
+        name: limit
+        type: integer
+      - description: search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.sitesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      security:
+      - ApiAuth: []
+      summary: List of sites
+      tags:
+      - sites
+    post:
+      consumes:
+      - application/json
+      description: add site
+      parameters:
+      - description: site info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSiteDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SiteRetrieveDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      security:
+      - ApiAuth: []
+      summary: Add Site
+      tags:
+      - sites
+  /api/sites/{site_id}/:
+    delete:
+      consumes:
+      - application/json
+      description: delete site
+      parameters:
+      - description: site id
+        in: path
+        name: site_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      security:
+      - ApiAuth: []
+      summary: Delete site
+      tags:
+      - sites
+    get:
+      consumes:
+      - application/json
+      description: site info
+      parameters:
+      - description: site id
+        in: path
+        name: site_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SiteRetrieveDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      security:
+      - ApiAuth: []
+      summary: Site Info
+      tags:
+      - sites
+    put:
+      consumes:
+      - application/json
+      description: update site
+      parameters:
+      - description: site id
+        in: path
+        name: site_id
+        required: true
+        type: string
+      - description: site info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateSiteDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SiteRetrieveDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      security:
+      - ApiAuth: []
+      summary: Update Site
+      tags:
+      - sites
+  /api/users/{user_id}/:
+    get:
+      consumes:
+      - application/json
+      description: user info
+      parameters:
+      - description: user id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserRetrieveDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      security:
+      - ApiAuth: []
+      summary: User Info
+      tags:
+      - users
+  /api/users/me/:
+    get:
+      consumes:
+      - application/json
+      description: current user info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserRetrieveDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.response'
+      security:
+      - ApiAuth: []
+      summary: Current User Info
+      tags:
+      - users
+securityDefinitions:
+  ApiAuth:
+    description: api auth
+    flow: password
+    tokenUrl: /api/auth/sign-in/
+    type: oauth2
+swagger: "2.0"

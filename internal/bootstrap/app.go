@@ -15,6 +15,11 @@ import (
 )
 
 // RunHTTP initializes http aplication.
+// @securitydefinitions.oauth2.password ApiAuth
+// @tokenUrl /api/auth/sign-in/
+// @description api auth
+// @in header
+// @name Authorization
 func RunHTTP() {
 	deps, err := InitDependencies()
 	if err != nil {
