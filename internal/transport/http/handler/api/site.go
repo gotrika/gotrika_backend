@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gotrika/gotrika_backend/internal/core"
 	"github.com/gotrika/gotrika_backend/internal/dto"
+	"github.com/gotrika/gotrika_backend/internal/transport/http/handler/utils"
 )
 
 type sitesResponse struct {
@@ -44,7 +45,7 @@ func (h *APIHandler) sitesCreate(c *gin.Context) {
 		return
 	}
 	userID := c.GetString(userIDCtx)
-	objID, _ := converIDtoObjectId(userID)
+	objID, _ := utils.ConverIDtoObjectId(userID)
 	resp, err := h.services.Sites.CreateSite(c.Request.Context(), objID, inp)
 	if err != nil {
 		newResponse(c, http.StatusBadRequest, err.Error())
@@ -72,7 +73,7 @@ func (h *APIHandler) sitesGet(c *gin.Context) {
 		return
 	}
 	userID := c.GetString(userIDCtx)
-	objID, _ := converIDtoObjectId(userID)
+	objID, _ := utils.ConverIDtoObjectId(userID)
 	isAdmin := c.GetBool(userIsAdminCtx)
 	siteRetrieve, err := h.services.Sites.GetSiteByID(c.Request.Context(), isAdmin, objID, siteID)
 	if err != nil {
@@ -101,7 +102,7 @@ func (h *APIHandler) siteDelete(c *gin.Context) {
 		return
 	}
 	userID := c.GetString(userIDCtx)
-	objID, _ := converIDtoObjectId(userID)
+	objID, _ := utils.ConverIDtoObjectId(userID)
 	isAdmin := c.GetBool(userIsAdminCtx)
 	err = h.services.Sites.DeleteSite(c.Request.Context(), isAdmin, objID, siteID)
 	if err != nil {
@@ -130,7 +131,7 @@ func (s *APIHandler) siteList(c *gin.Context) {
 	search := queryParams.Get("search")
 	limit, offset := getLimitOffsetFromQueryParams(c)
 	userID := c.GetString(userIDCtx)
-	objID, _ := converIDtoObjectId(userID)
+	objID, _ := utils.ConverIDtoObjectId(userID)
 	isAdmin := c.GetBool(userIsAdminCtx)
 	data, count, err := s.services.Sites.ListSites(
 		c.Request.Context(),
@@ -172,7 +173,7 @@ func (s *APIHandler) siteUpdate(c *gin.Context) {
 		return
 	}
 	userID := c.GetString(userIDCtx)
-	objID, _ := converIDtoObjectId(userID)
+	objID, _ := utils.ConverIDtoObjectId(userID)
 	isAdmin := c.GetBool(userIsAdminCtx)
 	res, err := s.services.Sites.UpdateSite(c.Request.Context(), isAdmin, objID, siteID, &siteDTO)
 	if err != nil {

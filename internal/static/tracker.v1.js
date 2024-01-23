@@ -51,15 +51,17 @@ var GOtrika = {
       hit_url: hit_url,
     };
     var data = {
+      site_id: GOtrika.code,
+      type: "event",
       hash_id: generateId(),
       timestamp: getUTC(getNow()),
-      tracked_event_data: tracked_event_data,
+      tracker_data: tracked_event_data,
     };
     try {
       var xhr = new XMLHttpRequest();
       xhr.open(
         "POST",
-        GOtrika.url + "event/" + "?site_id=" + GOtrika.code,
+        GOtrika.url,
         true
       );
       xhr.setRequestHeader("Content-Type", "application/json");
@@ -109,7 +111,6 @@ var GOtrika = {
   },
   _sendVisit: function () {
     var tracker_data = {
-      type: "visit",
       referrer: document.referrer,
       location: window.location.href,
       user_screen_width: screen.width,
@@ -121,9 +122,11 @@ var GOtrika = {
       session_timestamp: GOtrika.getSessionTimestamp(),
     };
     var data = {
-      hash_id: GOtrika.getHashId(),
+      site_id: GOtrika.code,
+      type: "session",
+      hash_id: generateId(),
       timestamp: getUTC(getNow()),
-      tracked_data: tracker_data,
+      tracker_data: tracker_data,
     };
     try {
       var xhr = new XMLHttpRequest();

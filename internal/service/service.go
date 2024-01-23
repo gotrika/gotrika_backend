@@ -26,6 +26,10 @@ type Sites interface {
 	UpdateSite(ctx context.Context, isAdmin bool, userID primitive.ObjectID, siteID primitive.ObjectID, siteDTO *dto.UpdateSiteDTO) (*dto.SiteRetrieveDTO, error)
 }
 
+type TrackerSrv interface {
+	SaveRawTrackerData(ctx context.Context, td *dto.AddRawTrackerDataDTO) error
+}
+
 type Dependencies struct {
 	Repos        *repository.Repositories
 	Hasher       hash.Hasher
@@ -33,14 +37,16 @@ type Dependencies struct {
 }
 
 type Services struct {
-	Users Users
-	Sites Sites
+	Users          Users
+	Sites          Sites
+	TrackerService TrackerSrv
 }
 
 // NewServices: init services
 func NewServices(deps Dependencies) *Services {
 	return &Services{
-		Users: NewUserService(deps.Repos.Users, deps.Hasher, deps.TokenManager),
-		Sites: NewSiteService(deps.Repos.Sites),
+		Users:          NewUserService(deps.Repos.Users, deps.Hasher, deps.TokenManager),
+		Sites:          NewSiteService(deps.Repos.Sites),
+		TrackerService: NewTrackerService(deps.Repos.TrackerRepo),
 	}
 }

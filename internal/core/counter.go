@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type RawCounterData struct {
+type RawTrackerData struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty"`
 	SiteID      primitive.ObjectID `bson:"site_id"`
 	HashID      string             `bson:"hash_id"`

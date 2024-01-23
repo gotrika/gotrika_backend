@@ -19,7 +19,6 @@ func (h *APIHandler) initUsersHandlers(api *gin.RouterGroup) {
 		users.GET("/me/", h.userMe)
 		users.GET("/:user_id/", h.userGet)
 	}
-
 }
 
 // @Summary User Sign Up

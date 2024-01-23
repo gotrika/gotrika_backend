@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gotrika/gotrika_backend/internal/service"
+	"github.com/gotrika/gotrika_backend/internal/transport/http/handler/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -25,21 +26,13 @@ func (h *APIHandler) Init(router *gin.Engine) {
 	h.initSitesHandlers(api)
 }
 
-func converIDtoObjectId(idParam string) (primitive.ObjectID, error) {
-	id, err := primitive.ObjectIDFromHex(idParam)
-	if err != nil {
-		return primitive.ObjectID{}, errors.New("invalid id param")
-	}
-	return id, nil
-}
-
 func parseIdFromPath(c *gin.Context, param string) (primitive.ObjectID, error) {
 	idParam := c.Param(param)
 	if idParam == "" {
 		return primitive.ObjectID{}, errors.New("empty id param")
 	}
 
-	return converIDtoObjectId(idParam)
+	return utils.ConverIDtoObjectId(idParam)
 }
 
 func getLimitOffsetFromQueryParams(c *gin.Context) (int, int) {

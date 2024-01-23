@@ -8,6 +8,7 @@ import (
 	"github.com/gotrika/gotrika_backend/internal/config"
 	"github.com/gotrika/gotrika_backend/internal/service"
 	"github.com/gotrika/gotrika_backend/internal/transport/http/handler/api"
+	"github.com/gotrika/gotrika_backend/internal/transport/http/handler/collect"
 	"github.com/mvrilo/go-redoc"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -48,5 +49,7 @@ func (h *Handler) Init(cfg *config.Config) *gin.Engine {
 	})
 	apiHandler := api.NewAPIHandler(h.services)
 	apiHandler.Init(router)
+	collectHandler := collect.NewCollectHandler(h.services)
+	collectHandler.Init(router)
 	return router
 }

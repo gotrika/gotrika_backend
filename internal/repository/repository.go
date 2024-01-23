@@ -24,16 +24,22 @@ type SitesR interface {
 	ListSites(ctx context.Context, listDTO *dto.ListSitesDTO) ([]core.Site, int, error)
 }
 
+type TrackerR interface {
+	SaveRawTrackerData(ctx context.Context, td *dto.AddRawTrackerDataDTO) error
+}
+
 type Repositories struct {
-	Users UsersR
-	Sites SitesR
+	Users       UsersR
+	Sites       SitesR
+	TrackerRepo TrackerR
 }
 
 // NewRepositories: ini all repos
 func NewRepositories(db *mongo.Database) *Repositories {
 	return &Repositories{
-		Users: NewUserRepo(db),
-		Sites: NewSiteRepo(db),
+		Users:       NewUserRepo(db),
+		Sites:       NewSiteRepo(db),
+		TrackerRepo: NewTrackerDataRepo(db),
 	}
 }
 
