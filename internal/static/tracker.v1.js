@@ -38,6 +38,13 @@ var GOtrika = {
       GOtrika._sendEvent(e);
     }
   },
+  setEnterUrl: function() {
+    var enter_url = localStorage.getItem("_GOtrika_enter_url");
+    if (enter_url === null) {
+      localStorage.setItem("_GOtrika_enter_url", window.document.href);
+    }
+    return hash_id;
+  },
   _sendEvent: function (e) {
     var hit_url = e.target.href || "";
     var tracked_event_data = {
@@ -142,11 +149,11 @@ var GOtrika = {
     }
   },
   newPageLoad: function (e) {
-    console.log(e);
     if (GOtrika.heartbeatTaskId != null) {
       clearInterval(GOtrika.heartbeatTaskId);
     }
     GOtrika.setVisitId();
+    GOtrika.setEnterUrl();
     GOtrika.heartbeatTaskId = setInterval(
       GOtrika._sendVisit,
       parseInt("900000000")
