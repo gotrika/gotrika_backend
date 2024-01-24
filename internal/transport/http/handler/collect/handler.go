@@ -17,5 +17,6 @@ func NewCollectHandler(services *service.Services) *CollectHandler {
 
 func (h *CollectHandler) Init(router *gin.Engine) {
 	collect := router.Group("/collect")
+	router.StaticFile("/static/tracker.v1.min.js", "./internal/static/tracker.v1.min.js")
 	h.initTrackerHandlers(collect)
 }
