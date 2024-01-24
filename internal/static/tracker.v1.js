@@ -32,24 +32,23 @@ var GOtrika = {
   heartbeatTaskId: null,
   heartbeatID: generateId(25),
   validateEvent: function (e) {
-    console.log(e.target);
     var valid_targets = ["button", "form", "a"];
     if (valid_targets.includes(e.target.localName)) {
       GOtrika._sendEvent(e);
     }
   },
   setEnterUrl: function() {
-    var enter_url = localStorage.getItem("_GOtrika_enter_url");
+    var enter_url = localStorage.getItem("_GOtrika_enter_url") || window.document.href;
     if (enter_url === null) {
       localStorage.setItem("_GOtrika_enter_url", window.document.href);
     }
-    return hash_id;
+    return enter_url;
   },
   _sendEvent: function (e) {
     var hit_url = e.target.href || "";
     var tracked_event_data = {
-      class_name: e.target.className,
-      event_type: e.target.localName,
+      class_name: e.target.className || "",
+      event_type: e.target.localName || "",
       page: window.location.href,
       page_title: document.title,
       visitor_id: GOtrika.getVisitorId(),
@@ -116,6 +115,14 @@ var GOtrika = {
     }
     localStorage.setItem("_GOtrika_session_id", session_id);
   },
+  _setSessionExpired: function() {
+    var exp = getUTC(getNow()) + 3600
+    localStorage.setItem("_GOtrika_session_expired", exp);
+  },
+  _getSessionExpired: function() {
+    var exp = localStorage.getItem("_GOtrika_session_expired") || "0"
+    return exp
+  },
   _sendVisit: function () {
     var tracker_data = {
       referrer: document.referrer,
@@ -139,7 +146,7 @@ var GOtrika = {
       var xhr = new XMLHttpRequest();
       xhr.open(
         "POST",
-        GOtrika.url + "visit/" + "?site_id=" + GOtrika.code,
+        GOtrika.url,
         true
       );
       xhr.setRequestHeader("Content-Type", "application/json");
@@ -149,16 +156,28 @@ var GOtrika = {
     }
   },
   newPageLoad: function (e) {
-    if (GOtrika.heartbeatTaskId != null) {
-      clearInterval(GOtrika.heartbeatTaskId);
+    now_timestamp = getUTC(getNow())
+    session_exp = parseInt(GOtrika._getSessionExpired())
+    if (now_timestamp >= session_exp) {
+      GOtrika._setSessionExpired()
+      GOtrika.setVisitId();
+      GOtrika.setEnterUrl();
+      GOtrika._sendVisit();
+    } else if (session_exp !== 0) {
+      GOtrika._sendEvent(e)
+      return
     }
-    GOtrika.setVisitId();
-    GOtrika.setEnterUrl();
+    if (GOtrika.heartbeatTaskId != null) {
+      clearInterval(GOtrika.heartbeatTaskId)
+    }
+    
+    
     GOtrika.heartbeatTaskId = setInterval(
       GOtrika._sendVisit,
-      parseInt("900000000")
+      1000 * 60 * 60,
     );
-    GOtrika._sendVisit();
+    // GOtrika._sendVisit();
+    
   },
 };
 window.addEventListener("load", GOtrika.newPageLoad);

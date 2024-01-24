@@ -42,7 +42,11 @@ func (h *CollectHandler) CollectData(c *gin.Context) {
 		Type:        inp.Type,
 		TrackerData: inp.TrackerData,
 	}
-	go h.services.TrackerService.SaveRawTrackerData(c.Request.Context(), &addDTO)
+	err = h.services.TrackerService.SaveRawTrackerData(c.Request.Context(), &addDTO)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
 
 	resp := trackerResponse{Success: true}
 	c.JSON(http.StatusOK, &resp)
