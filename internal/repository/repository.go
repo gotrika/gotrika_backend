@@ -17,7 +17,7 @@ type UsersR interface {
 }
 
 type SitesR interface {
-	CreateSite(ctx context.Context, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO) (*core.Site, error)
+	CreateSite(ctx context.Context, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO, scriptUrl string) (*core.Site, error)
 	UpdateSite(ctx context.Context, siteID primitive.ObjectID, siteDTO *dto.UpdateSiteDTO) (*core.Site, error)
 	DeleteSite(ctx context.Context, siteID primitive.ObjectID) error
 	GetSiteByID(ctx context.Context, siteID primitive.ObjectID) (*core.Site, error)

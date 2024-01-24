@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -44,9 +45,10 @@ func (h *APIHandler) sitesCreate(c *gin.Context) {
 		newResponse(c, http.StatusBadRequest, "invalid input site body")
 		return
 	}
+	url := fmt.Sprintf("http://%s", c.Request.Host)
 	userID := c.GetString(userIDCtx)
 	objID, _ := utils.ConverIDtoObjectId(userID)
-	resp, err := h.services.Sites.CreateSite(c.Request.Context(), objID, inp)
+	resp, err := h.services.Sites.CreateSite(c.Request.Context(), url, objID, inp)
 	if err != nil {
 		newResponse(c, http.StatusBadRequest, err.Error())
 		return

@@ -1,4 +1,6 @@
+<!-- load GOtrika tracker -->
 <script type="text/javascript" src="{{ .url }}/static/tracker.v1.min.js"></script>
+<!-- init GOtrika tracker -->
 <script>
-    GOtrika.Init('64ba97d8f8829ac96595348d', "{{ .url }}/collect/")
+    GOtrika.Init('{{ .code }}', "{{ .url }}/collect/")
 </script>

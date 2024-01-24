@@ -10,7 +10,7 @@ import (
 )
 
 type SitesR interface {
-	CreateSite(ctx context.Context, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO) (*core.Site, error)
+	CreateSite(ctx context.Context, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO, scriptUrl string) (*core.Site, error)
 	UpdateSite(ctx context.Context, siteID primitive.ObjectID, siteDTO *dto.UpdateSiteDTO) (*core.Site, error)
 	DeleteSite(ctx context.Context, siteID primitive.ObjectID) error
 	GetSiteByID(ctx context.Context, siteID primitive.ObjectID) (*core.Site, error)
@@ -36,12 +36,13 @@ func (s *SiteService) convertCoreSiteToSiteRetrive(site *core.Site) *dto.SiteRet
 		URL:         site.URL,
 		OwnerID:     site.OwnerId.Hex(),
 		AccessUsers: accessUsers,
+		CounterCode: site.CounterCode,
 	}
 	return &siteRetrieve
 }
 
-func (s *SiteService) CreateSite(ctx context.Context, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO) (*dto.SiteRetrieveDTO, error) {
-	site, err := s.repo.CreateSite(ctx, userID, siteDTO)
+func (s *SiteService) CreateSite(ctx context.Context, url string, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO) (*dto.SiteRetrieveDTO, error) {
+	site, err := s.repo.CreateSite(ctx, userID, siteDTO, url)
 	if err != nil {
 		return nil, err
 	}

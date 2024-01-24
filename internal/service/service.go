@@ -19,7 +19,7 @@ type Users interface {
 }
 
 type Sites interface {
-	CreateSite(ctx context.Context, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO) (*dto.SiteRetrieveDTO, error)
+	CreateSite(ctx context.Context, url string, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO) (*dto.SiteRetrieveDTO, error)
 	GetSiteByID(ctx context.Context, isAdmin bool, userID, siteID primitive.ObjectID) (*dto.SiteRetrieveDTO, error)
 	DeleteSite(ctx context.Context, isAdmin bool, userID, siteID primitive.ObjectID) error
 	ListSites(ctx context.Context, search string, isAdmin bool, userID primitive.ObjectID, limit int, offset int) ([]*dto.SiteRetrieveDTO, int, error)

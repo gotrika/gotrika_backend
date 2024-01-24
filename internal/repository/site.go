@@ -1,8 +1,11 @@
 package repository
 
 import (
+	"bytes"
 	"context"
 	"errors"
+	"html/template"
+	"os"
 
 	"github.com/gotrika/gotrika_backend/internal/core"
 	"github.com/gotrika/gotrika_backend/internal/dto"
@@ -10,6 +13,18 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+func generateCounterCode(url string, siteID string) string {
+	file, err := os.ReadFile("./internal/templates/tracker.tpl")
+	if err != nil {
+		panic(err)
+	}
+	var tpl bytes.Buffer
+	t := template.Must(template.New("t").Parse(string(file)))
+	_ = t.Execute(&tpl, map[string]string{"code": siteID, "url": url})
+	script := tpl.String()
+	return script
+}
 
 type SiteRepo struct {
 	collection *mongo.Collection
@@ -21,7 +36,7 @@ func NewSiteRepo(db *mongo.Database) *SiteRepo {
 	}
 }
 
-func (r *SiteRepo) CreateSite(ctx context.Context, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO) (*core.Site, error) {
+func (r *SiteRepo) CreateSite(ctx context.Context, userID primitive.ObjectID, siteDTO dto.CreateSiteDTO, scriptUrl string) (*core.Site, error) {
 
 	s := core.Site{
 		Name:        siteDTO.Name,
@@ -34,6 +49,8 @@ func (r *SiteRepo) CreateSite(ctx context.Context, userID primitive.ObjectID, si
 		return nil, err
 	}
 	s.ID = res.InsertedID.(primitive.ObjectID)
+	s.CounterCode = generateCounterCode(scriptUrl, s.ID.Hex())
+	_, _ = r.collection.UpdateByID(ctx, s.ID, bson.D{bson.E{Key: "$set", Value: bson.M{"counter_code": s.CounterCode}}})
 	return &s, nil
 }
 
