@@ -9,7 +9,7 @@ import (
 type AddRawTrackerDataDTO struct {
 	SiteID      primitive.ObjectID `json:"site_id"`
 	HashID      string             `json:"hash_id"`
-	Datetime    time.Time          `json:"datetime"`
+	Timestamp   time.Time          `json:"timestamp"`
 	Type        string             `json:"type"`
 	TrackerData []byte             `json:"tracked_data"`
 }

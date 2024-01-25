@@ -1,8 +1,6 @@
 package core
 
 import (
-	"time"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -10,7 +8,7 @@ type RawTrackerData struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty"`
 	SiteID      primitive.ObjectID `bson:"site_id"`
 	HashID      string             `bson:"hash_id"`
-	Datetime    time.Time          `bson:"datetime"`
+	Datetime    primitive.DateTime `bson:"datetime"`
 	Type        string             `bson:"type"`
 	TrackerData []byte             `bson:"tracked_data"`
 }

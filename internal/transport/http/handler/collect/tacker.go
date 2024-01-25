@@ -19,7 +19,7 @@ func (h *CollectHandler) initTrackerHandlers(collect *gin.RouterGroup) {
 type CollectRequest struct {
 	SiteID      string `json:"site_id"`
 	HashID      string `json:"hash_id"`
-	Datetime    int    `json:"datetime"`
+	Timestamp   int    `json:"timestamp"`
 	Type        string `json:"type"`
 	TrackerData []byte `json:"tracked_data"`
 }
@@ -38,7 +38,7 @@ func (h *CollectHandler) CollectData(c *gin.Context) {
 	addDTO := dto.AddRawTrackerDataDTO{
 		SiteID:      siteID,
 		HashID:      inp.HashID,
-		Datetime:    time.Unix(int64(inp.Datetime), 0),
+		Timestamp:   time.Unix(int64(inp.Timestamp), 0),
 		Type:        inp.Type,
 		TrackerData: inp.TrackerData,
 	}

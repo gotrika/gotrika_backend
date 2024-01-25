@@ -5,6 +5,7 @@ import (
 
 	"github.com/gotrika/gotrika_backend/internal/core"
 	"github.com/gotrika/gotrika_backend/internal/dto"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -26,7 +27,7 @@ func (r *TrackerDataRepo) SaveRawTrackerData(ctx context.Context, td *dto.AddRaw
 	rawTrackerData := core.RawTrackerData{
 		SiteID:      td.SiteID,
 		HashID:      td.HashID,
-		Datetime:    td.Datetime,
+		Datetime:    primitive.NewDateTimeFromTime(td.Timestamp),
 		Type:        td.Type,
 		TrackerData: td.TrackerData,
 	}
