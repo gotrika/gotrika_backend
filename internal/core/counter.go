@@ -11,6 +11,8 @@ type RawTrackerData struct {
 	Datetime    primitive.DateTime `bson:"datetime"`
 	Type        string             `bson:"type"`
 	TrackerData []byte             `bson:"tracked_data"`
+	InWork      bool               `bson:"in_work"`
+	Parsed      bool               `bson:"parsed"`
 }
 
 type Session struct {

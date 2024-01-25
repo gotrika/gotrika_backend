@@ -30,6 +30,8 @@ func (r *TrackerDataRepo) SaveRawTrackerData(ctx context.Context, td *dto.AddRaw
 		Datetime:    primitive.NewDateTimeFromTime(td.Timestamp),
 		Type:        td.Type,
 		TrackerData: td.TrackerData,
+		Parsed:      false,
+		InWork:      false,
 	}
 	_, err := r.rawDataCollection.InsertOne(ctx, &rawTrackerData)
 	if err != nil {

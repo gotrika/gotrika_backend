@@ -11,5 +11,5 @@ type AddRawTrackerDataDTO struct {
 	HashID      string             `json:"hash_id"`
 	Timestamp   time.Time          `json:"timestamp"`
 	Type        string             `json:"type"`
-	TrackerData []byte             `json:"tracked_data"`
+	TrackerData []byte             `json:"tracker_data"`
 }

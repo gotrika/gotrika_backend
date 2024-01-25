@@ -1,6 +1,7 @@
 package collect
 
 import (
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -17,17 +18,17 @@ func (h *CollectHandler) initTrackerHandlers(collect *gin.RouterGroup) {
 }
 
 type CollectRequest struct {
-	SiteID      string `json:"site_id"`
-	HashID      string `json:"hash_id"`
-	Timestamp   int    `json:"timestamp"`
-	Type        string `json:"type"`
-	TrackerData []byte `json:"tracked_data"`
+	SiteID         string          `json:"site_id"`
+	HashID         string          `json:"hash_id"`
+	Timestamp      int             `json:"timestamp"`
+	Type           string          `json:"type"`
+	RawTrackerData json.RawMessage `json:"tracker_data"`
 }
 
 func (h *CollectHandler) CollectData(c *gin.Context) {
 	var inp CollectRequest
 	if err := c.BindJSON(&inp); err != nil {
-		newResponse(c, http.StatusBadRequest, "invalid input body")
+		newResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 	siteID, err := utils.ConverIDtoObjectId(inp.SiteID)
@@ -35,12 +36,17 @@ func (h *CollectHandler) CollectData(c *gin.Context) {
 		newResponse(c, http.StatusBadRequest, "invalid site id")
 		return
 	}
+	trackerData, err := inp.RawTrackerData.MarshalJSON()
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
 	addDTO := dto.AddRawTrackerDataDTO{
 		SiteID:      siteID,
 		HashID:      inp.HashID,
 		Timestamp:   time.Unix(int64(inp.Timestamp), 0),
 		Type:        inp.Type,
-		TrackerData: inp.TrackerData,
+		TrackerData: trackerData,
 	}
 	err = h.services.TrackerService.SaveRawTrackerData(c.Request.Context(), &addDTO)
 	if err != nil {
