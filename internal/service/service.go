@@ -30,6 +30,13 @@ type TrackerSrv interface {
 	SaveRawTrackerData(ctx context.Context, td *dto.TrackerDataDTO) error
 }
 
+type Events interface {
+	ParseTask(ctx context.Context, parseTaskDTO dto.ParseTask) error
+}
+type Sessions interface {
+	ParseTask(ctx context.Context, parseTaskDTO dto.ParseTask) error
+}
+
 type Dependencies struct {
 	Repos        *repository.Repositories
 	Hasher       hash.Hasher
@@ -40,6 +47,8 @@ type Services struct {
 	Users          Users
 	Sites          Sites
 	TrackerService TrackerSrv
+	Events         Events
+	Sessions       Sessions
 }
 
 // NewServices: init services
@@ -48,5 +57,7 @@ func NewServices(deps Dependencies) *Services {
 		Users:          NewUserService(deps.Repos.Users, deps.Hasher, deps.TokenManager),
 		Sites:          NewSiteService(deps.Repos.Sites),
 		TrackerService: NewTrackerService(deps.Repos.TrackerRepo),
+		Sessions:       NewSessionService(deps.Repos.Sessions),
+		Events:         NewEventService(deps.Repos.Events),
 	}
 }

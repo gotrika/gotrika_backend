@@ -15,9 +15,10 @@ type Config struct {
 	HTTPConfig struct {
 		Port string `env:"PORT" env-default:"8000"`
 	}
-	// AMQPConfig struct {
-	// 	URI string `env:"AMQP_URI" env-required:"true"`
-	// }
+	CabbageConfig struct {
+		BrokerURI   string `env:"CABBAGE_BROKER_URI" env-required:"true"`
+		WorkerCount int    `env:"CABBAGE_WORKER_COUNT" env-default:"10"`
+	}
 	MongoConfig struct {
 		HOST     string `env:"MONGO_HOST" env-required:"true"`
 		PORT     string `env:"MONGO_PORT" env-required:"true"`

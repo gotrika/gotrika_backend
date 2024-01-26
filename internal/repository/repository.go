@@ -28,10 +28,20 @@ type TrackerR interface {
 	SaveRawTrackerData(ctx context.Context, td *dto.TrackerDataDTO) error
 }
 
+type EventR interface {
+	Save(ctx context.Context, eventDTO dto.EventTaskDTO) error
+}
+
+type SessionR interface {
+	Save(ctx context.Context, sessionDTO dto.SessionTaskDTO) error
+}
+
 type Repositories struct {
 	Users       UsersR
 	Sites       SitesR
 	TrackerRepo TrackerR
+	Events      EventR
+	Sessions    SessionR
 }
 
 // NewRepositories: ini all repos
@@ -40,6 +50,8 @@ func NewRepositories(db *mongo.Database) *Repositories {
 		Users:       NewUserRepo(db),
 		Sites:       NewSiteRepo(db),
 		TrackerRepo: NewTrackerDataRepo(db),
+		Events:      NewEventRepo(db),
+		Sessions:    NewSessionRepo(db),
 	}
 }
 
