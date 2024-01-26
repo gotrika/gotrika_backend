@@ -9,12 +9,14 @@ import (
 )
 
 type SessionRepo struct {
-	collection *mongo.Collection
+	rawDataCollection *mongo.Collection
+	collection        *mongo.Collection
 }
 
 func NewSessionRepo(db *mongo.Database) *SessionRepo {
 	return &SessionRepo{
-		collection: db.Collection(core.SessionCollectionName),
+		rawDataCollection: db.Collection(core.RawTrackerDataCollectioName),
+		collection:        db.Collection(core.SessionCollectionName),
 	}
 }
 

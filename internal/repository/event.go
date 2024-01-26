@@ -9,12 +9,14 @@ import (
 )
 
 type EventRepo struct {
-	collection *mongo.Collection
+	rawDataCollection *mongo.Collection
+	collection        *mongo.Collection
 }
 
 func NewEventRepo(db *mongo.Database) *EventRepo {
 	return &EventRepo{
-		collection: db.Collection(core.EventCollectionName),
+		rawDataCollection: db.Collection(core.RawTrackerDataCollectioName),
+		collection:        db.Collection(core.EventCollectionName),
 	}
 }
 

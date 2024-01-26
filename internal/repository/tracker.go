@@ -11,15 +11,11 @@ import (
 
 type TrackerDataRepo struct {
 	rawDataCollection *mongo.Collection
-	sessionCollection *mongo.Collection
-	eventCollection   *mongo.Collection
 }
 
 func NewTrackerDataRepo(db *mongo.Database) *TrackerDataRepo {
 	return &TrackerDataRepo{
 		rawDataCollection: db.Collection(core.RawTrackerDataCollectioName),
-		sessionCollection: db.Collection(core.SessionCollectionName),
-		eventCollection:   db.Collection(core.EventCollectionName),
 	}
 }
 
