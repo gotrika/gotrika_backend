@@ -133,7 +133,7 @@ var GOtrika = {
       user_agent: navigator.userAgent,
       visitor_id: GOtrika.getVisitorId(),
       session_id: GOtrika.getSessionId(),
-      session_timestamp: GOtrika.getSessionTimestamp(),
+      session_timestamp: parseInt(GOtrika.getSessionTimestamp()),
     };
     var data = {
       site_id: GOtrika.code,

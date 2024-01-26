@@ -7,7 +7,7 @@ import (
 )
 
 type TrackerR interface {
-	SaveRawTrackerData(ctx context.Context, td *dto.AddRawTrackerDataDTO) error
+	SaveRawTrackerData(ctx context.Context, td *dto.TrackerDataDTO) error
 }
 
 type TrackerService struct {
@@ -21,6 +21,6 @@ func NewTrackerService(repo TrackerR) *TrackerService {
 	return service
 }
 
-func (s *TrackerService) SaveRawTrackerData(ctx context.Context, td *dto.AddRawTrackerDataDTO) error {
+func (s *TrackerService) SaveRawTrackerData(ctx context.Context, td *dto.TrackerDataDTO) error {
 	return s.repo.SaveRawTrackerData(ctx, td)
 }

@@ -23,7 +23,7 @@ func NewTrackerDataRepo(db *mongo.Database) *TrackerDataRepo {
 	}
 }
 
-func (r *TrackerDataRepo) SaveRawTrackerData(ctx context.Context, td *dto.AddRawTrackerDataDTO) error {
+func (r *TrackerDataRepo) SaveRawTrackerData(ctx context.Context, td *dto.TrackerDataDTO) error {
 	rawTrackerData := core.RawTrackerData{
 		SiteID:      td.SiteID,
 		HashID:      td.HashID,

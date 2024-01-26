@@ -41,7 +41,7 @@ func (h *CollectHandler) CollectData(c *gin.Context) {
 		newResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	addDTO := dto.AddRawTrackerDataDTO{
+	addDTO := dto.TrackerDataDTO{
 		SiteID:      siteID,
 		HashID:      inp.HashID,
 		Timestamp:   time.Unix(int64(inp.Timestamp), 0),
@@ -53,7 +53,6 @@ func (h *CollectHandler) CollectData(c *gin.Context) {
 		newResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-
 	resp := trackerResponse{Success: true}
 	c.JSON(http.StatusOK, &resp)
 

@@ -25,7 +25,7 @@ type SitesR interface {
 }
 
 type TrackerR interface {
-	SaveRawTrackerData(ctx context.Context, td *dto.AddRawTrackerDataDTO) error
+	SaveRawTrackerData(ctx context.Context, td *dto.TrackerDataDTO) error
 }
 
 type Repositories struct {
