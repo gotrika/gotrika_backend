@@ -26,6 +26,9 @@ type SitesR interface {
 
 type TrackerR interface {
 	SaveRawTrackerData(ctx context.Context, td *dto.TrackerDataDTO) error
+	GetUnparsedTrackerData(ctx context.Context, dtype string) ([]*core.RawTrackerData, error)
+	ToWorkTrackerData(ctx context.Context, ids []primitive.ObjectID) error
+	ToParsedTrackerData(ctx context.Context, ids []primitive.ObjectID) error
 }
 
 type EventR interface {

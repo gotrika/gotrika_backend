@@ -1,7 +1,18 @@
 package dto
 
+import "encoding/json"
+
 type ParseTask struct {
-	ID string `json:"id"`
+	IDS  []string `json:"ids"`
+	Type string   `json:"type"`
+}
+
+func (t *ParseTask) ToPublish() ([]byte, error) {
+	js, err := json.Marshal(t)
+	if err != nil {
+		return []byte(""), err
+	}
+	return js, nil
 }
 
 type SessionTaskDTO struct {

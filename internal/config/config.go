@@ -16,8 +16,10 @@ type Config struct {
 		Port string `env:"PORT" env-default:"8000"`
 	}
 	CabbageConfig struct {
-		BrokerURI   string `env:"CABBAGE_BROKER_URI" env-required:"true"`
-		WorkerCount int    `env:"CABBAGE_WORKER_COUNT" env-default:"10"`
+		BrokerURI        string `env:"CABBAGE_BROKER_URI" env-required:"true"`
+		WorkerCount      int    `env:"CABBAGE_WORKER_COUNT" env-default:"10"`
+		EventQueueName   string `env:"CABBAGE_EVENT_QUEUENAME" env-default:"gotrika_events"`
+		SessionQueueName string `env:"CABBAGE_SESSION_QUEUENAME" env-default:"gotrika_sessions"`
 	}
 	MongoConfig struct {
 		HOST     string `env:"MONGO_HOST" env-required:"true"`

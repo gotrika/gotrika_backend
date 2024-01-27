@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/bzdvdn/cabbage/cabbage"
 	"github.com/gotrika/gotrika_backend/internal/dto"
 	"github.com/gotrika/gotrika_backend/internal/repository"
 	"github.com/gotrika/gotrika_backend/pkg/auth"
@@ -28,6 +29,8 @@ type Sites interface {
 
 type TrackerSrv interface {
 	SaveRawTrackerData(ctx context.Context, td *dto.TrackerDataDTO) error
+	ScheduleEventFunc(ctx context.Context) (func() (tpublisher cabbage.TaskPublisher), error)
+	ScheduleSessionFunc(ctx context.Context) (func() (tpublisher cabbage.TaskPublisher), error)
 }
 
 type Events interface {
