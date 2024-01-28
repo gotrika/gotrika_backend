@@ -10,7 +10,7 @@ import (
 
 type EventR interface {
 	Save(ctx context.Context, eventDTO dto.EventTaskDTO) error
-	InserManyEvents(ctx context.Context, eventDTOs []dto.EventTaskDTO) error
+	InsertManyEvents(ctx context.Context, eventDTOs []dto.EventTaskDTO) error
 }
 
 type EventService struct {
@@ -46,8 +46,9 @@ func (s *EventService) ParseTask(ctx context.Context, parseTaskDTO *dto.ParseTas
 			return err
 		}
 		eventDTO.ServerTimestamp = int(rawEvent.Datetime.Time().Unix())
+		eventDTO.SiteID = rawEvent.SiteID
 		dtos[index] = eventDTO
 	}
-	err = s.repo.InserManyEvents(ctx, dtos)
+	err = s.repo.InsertManyEvents(ctx, dtos)
 	return err
 }

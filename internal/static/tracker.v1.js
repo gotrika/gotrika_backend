@@ -55,6 +55,7 @@ var GOtrika = {
       session_id: GOtrika.getSessionId(),
       client_timestamp: Math.floor(getNow().getTime() / 1000),
       hit_url: hit_url,
+      referrer: document.referrer,
     };
     var data = {
       site_id: GOtrika.code,

@@ -57,5 +57,4 @@ func (h *CollectHandler) CollectData(c *gin.Context) {
 	}
 	resp := trackerResponse{Success: true}
 	c.JSON(http.StatusOK, &resp)
-
 }

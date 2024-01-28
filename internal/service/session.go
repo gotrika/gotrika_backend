@@ -7,7 +7,7 @@ import (
 )
 
 type SessionR interface {
-	Save(ctx context.Context, sessionDTO dto.SessionTaskDTO) error
+	Save(ctx context.Context, sessionDTO dto.SessionDTO) error
 }
 
 type SessionService struct {

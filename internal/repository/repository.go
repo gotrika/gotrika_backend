@@ -34,11 +34,11 @@ type TrackerR interface {
 
 type EventR interface {
 	Save(ctx context.Context, eventDTO dto.EventTaskDTO) error
-	InserManyEvents(ctx context.Context, eventDTOs []dto.EventTaskDTO) error
+	InsertManyEvents(ctx context.Context, eventDTOs []dto.EventTaskDTO) error
 }
 
 type SessionR interface {
-	Save(ctx context.Context, sessionDTO dto.SessionTaskDTO) error
+	Save(ctx context.Context, sessionDTO dto.SessionDTO) error
 }
 
 type Repositories struct {

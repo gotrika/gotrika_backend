@@ -20,6 +20,6 @@ func NewSessionRepo(db *mongo.Database) *SessionRepo {
 	}
 }
 
-func (r *SessionRepo) Save(ctx context.Context, sessionDTO dto.SessionTaskDTO) error {
+func (r *SessionRepo) Save(ctx context.Context, sessionDTO dto.SessionDTO) error {
 	return nil
 }

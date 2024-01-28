@@ -1,6 +1,10 @@
 package dto
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type ParseTask struct {
 	IDS  []string `json:"ids"`
@@ -23,6 +27,7 @@ type SessionTaskDTO struct {
 	ClientTimezone   string `json:"client_timezone"`
 	SessionTimestamp int    `json:"session_timestamp"`
 	Referrer         string `json:"referrer"`
+	SiteID           primitive.ObjectID
 }
 
 type EventTaskDTO struct {
@@ -34,5 +39,7 @@ type EventTaskDTO struct {
 	Page            string `json:"page"`
 	PageTitle       string `json:"page_title"`
 	HitURL          string `json:"hit_url"`
+	Referrer        string `json:"referrer"`
 	ServerTimestamp int
+	SiteID          primitive.ObjectID
 }
