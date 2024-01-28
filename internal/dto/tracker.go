@@ -12,4 +12,5 @@ type TrackerDataDTO struct {
 	Timestamp   time.Time          `json:"timestamp"`
 	Type        string             `json:"type"`
 	TrackerData []byte             `json:"tracker_data"`
+	RealIP      string
 }

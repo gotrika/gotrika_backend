@@ -27,6 +27,7 @@ type CollectRequest struct {
 
 func (h *CollectHandler) CollectData(c *gin.Context) {
 	var inp CollectRequest
+	realIP := c.ClientIP()
 	if err := c.BindJSON(&inp); err != nil {
 		newResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -47,6 +48,7 @@ func (h *CollectHandler) CollectData(c *gin.Context) {
 		Timestamp:   time.Unix(int64(inp.Timestamp), 0),
 		Type:        inp.Type,
 		TrackerData: trackerData,
+		RealIP:      realIP,
 	}
 	err = h.services.TrackerService.SaveRawTrackerData(c.Request.Context(), &addDTO)
 	if err != nil {
