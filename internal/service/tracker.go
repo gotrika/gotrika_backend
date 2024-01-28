@@ -14,6 +14,7 @@ type TrackerR interface {
 	GetUnparsedTrackerData(ctx context.Context, dtype string) ([]*core.RawTrackerData, error)
 	ToWorkTrackerData(ctx context.Context, ids []primitive.ObjectID) error
 	ToParsedTrackerData(ctx context.Context, ids []primitive.ObjectID) error
+	GetTrackerDataByIDs(ctx context.Context, ids []primitive.ObjectID) ([]*core.RawTrackerData, error)
 }
 
 type TrackerService struct {

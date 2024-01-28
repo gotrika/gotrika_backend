@@ -18,6 +18,6 @@ func NewSessionService(repo SessionR) *SessionService {
 	return &SessionService{repo: repo}
 }
 
-func (s *SessionService) ParseTask(ctx context.Context, parseTaskDTO dto.ParseTask) error {
+func (s *SessionService) ParseTask(ctx context.Context, parseTaskDTO *dto.ParseTask) error {
 	return nil
 }

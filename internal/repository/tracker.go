@@ -55,6 +55,20 @@ func (r *TrackerDataRepo) GetUnparsedTrackerData(ctx context.Context, dtype stri
 	return data, nil
 }
 
+func (r *TrackerDataRepo) GetTrackerDataByIDs(ctx context.Context, ids []primitive.ObjectID) ([]*core.RawTrackerData, error) {
+	var data []*core.RawTrackerData
+	query := bson.M{"_id": bson.M{"$in": ids}}
+	cur, err := r.rawDataCollection.Find(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	if err := cur.All(ctx, &data); err != nil {
+		return nil, err
+	}
+	return data, nil
+
+}
+
 func (r *TrackerDataRepo) ToWorkTrackerData(ctx context.Context, ids []primitive.ObjectID) error {
 	query := bson.M{"_id": bson.M{"$in": ids}}
 	update := bson.M{"$set": bson.M{"in_work": true}}

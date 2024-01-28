@@ -34,10 +34,10 @@ type TrackerSrv interface {
 }
 
 type Events interface {
-	ParseTask(ctx context.Context, parseTaskDTO dto.ParseTask) error
+	ParseTask(ctx context.Context, parseTaskDTO *dto.ParseTask) error
 }
 type Sessions interface {
-	ParseTask(ctx context.Context, parseTaskDTO dto.ParseTask) error
+	ParseTask(ctx context.Context, parseTaskDTO *dto.ParseTask) error
 }
 
 type Dependencies struct {
@@ -61,6 +61,6 @@ func NewServices(deps Dependencies) *Services {
 		Sites:          NewSiteService(deps.Repos.Sites),
 		TrackerService: NewTrackerService(deps.Repos.TrackerRepo),
 		Sessions:       NewSessionService(deps.Repos.Sessions),
-		Events:         NewEventService(deps.Repos.Events),
+		Events:         NewEventService(deps.Repos.Events, deps.Repos.TrackerRepo),
 	}
 }

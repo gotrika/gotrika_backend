@@ -34,4 +34,5 @@ type EventTaskDTO struct {
 	Page            string `json:"page"`
 	PageTitle       string `json:"page_title"`
 	HitURL          string `json:"hit_url"`
+	ServerTimestamp int
 }

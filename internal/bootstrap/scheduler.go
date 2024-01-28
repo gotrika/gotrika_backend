@@ -18,6 +18,7 @@ func RunScheduler() {
 		logger.Error("Failed init amqp")
 		return
 	}
+	defer amqpClient.Close()
 	ctx := context.Background()
 	scheduler := amqpClient.CreateScheduler(ctx)
 	<-scheduler.Start()

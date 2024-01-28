@@ -8,6 +8,11 @@ import (
 	"github.com/gotrika/gotrika_backend/internal/service"
 )
 
+const (
+	eventTaskName   = "parseEvents"
+	sessionTaskName = "parseSessions"
+)
+
 type TaskManager struct {
 	services *service.Services
 	cfg      *config.Config
@@ -26,12 +31,12 @@ func (m *TaskManager) CreateSchedulerTasks(ctx context.Context) []*cabbage.Sched
 	sessionScheduleTaskFunc, _ := m.services.TrackerService.ScheduleSessionFunc(ctx)
 	tasks := []*cabbage.ScheduleTask{
 		{
-			Name:      "parseSessions",
+			Name:      sessionTaskName,
 			QueueName: m.cfg.CabbageConfig.SessionQueueName,
 			Func:      sessionScheduleTaskFunc,
 			Entries:   cabbage.Entries{&cabbage.Entry{Schedule: "* * * * *"}},
 		}, {
-			Name:      "parseEvents",
+			Name:      eventTaskName,
 			QueueName: m.cfg.CabbageConfig.EventQueueName,
 			Func:      eventScheduleTaskFunc,
 			Entries:   cabbage.Entries{every5min},
@@ -39,6 +44,20 @@ func (m *TaskManager) CreateSchedulerTasks(ctx context.Context) []*cabbage.Sched
 	return tasks
 }
 
-func (m *TaskManager) CreateWorkerTasks() []*cabbage.Task {
-	return nil
+func (m *TaskManager) CreateSessionTask() *cabbage.Task {
+	sessionTask := cabbage.Task{
+		Name:        sessionTaskName,
+		QueueName:   m.cfg.CabbageConfig.SessionQueueName,
+		TProccesser: NewSessionTaskProccesser(m.services.Sessions),
+	}
+	return &sessionTask
+}
+
+func (m *TaskManager) CreateEventTask() *cabbage.Task {
+	eventTask := cabbage.Task{
+		Name:        eventTaskName,
+		QueueName:   m.cfg.CabbageConfig.EventQueueName,
+		TProccesser: NewEventTaskPoccesser(m.services.Events),
+	}
+	return &eventTask
 }

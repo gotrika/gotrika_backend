@@ -39,3 +39,19 @@ func (c *AMQPClient) CreateScheduler(ctx context.Context) *Scheduler {
 	scheduler.AddTasks(scheduleTasks)
 	return scheduler
 }
+
+func (c *AMQPClient) CreateWorkerManager(ctx context.Context) (*WorkerManager, error) {
+	wm, err := NewWorkerManager(c.cabbageClient, c.cfg)
+	if err != nil {
+		return nil, err
+	}
+	sessionTask := c.taskManager.CreateSessionTask()
+	eventTask := c.taskManager.CreateEventTask()
+	if err := wm.RegisterTask(sessionTask); err != nil {
+		return nil, err
+	}
+	if err := wm.RegisterTask(eventTask); err != nil {
+		return nil, err
+	}
+	return wm, nil
+}

@@ -23,3 +23,7 @@ func NewEventRepo(db *mongo.Database) *EventRepo {
 func (r *EventRepo) Save(ctx context.Context, eventDTO dto.EventTaskDTO) error {
 	return nil
 }
+
+func (r *EventRepo) InserManyEvents(ctx context.Context, eventDTOs []dto.EventTaskDTO) error {
+	return nil
+}
