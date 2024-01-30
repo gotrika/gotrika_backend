@@ -38,7 +38,8 @@ type EventR interface {
 }
 
 type SessionR interface {
-	Save(ctx context.Context, sessionDTO dto.SessionDTO) error
+	Save(ctx context.Context, session core.Session) error
+	InsertManySessions(ctx context.Context, sessions []core.Session) error
 }
 
 type Repositories struct {

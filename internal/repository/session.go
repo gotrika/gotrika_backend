@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/gotrika/gotrika_backend/internal/core"
-	"github.com/gotrika/gotrika_backend/internal/dto"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -20,6 +19,15 @@ func NewSessionRepo(db *mongo.Database) *SessionRepo {
 	}
 }
 
-func (r *SessionRepo) Save(ctx context.Context, sessionDTO dto.SessionDTO) error {
+func (r *SessionRepo) Save(ctx context.Context, session core.Session) error {
 	return nil
+}
+
+func (r *SessionRepo) InsertManySessions(ctx context.Context, sessions []core.Session) error {
+	coreSessions := make([]interface{}, len(sessions))
+	for index, session := range sessions {
+		coreSessions[index] = session
+	}
+	_, err := r.collection.InsertMany(ctx, coreSessions)
+	return err
 }

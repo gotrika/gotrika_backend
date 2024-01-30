@@ -26,6 +26,9 @@ type SessionTaskDTO struct {
 	Location         string `json:"location"`
 	ClientTimezone   string `json:"client_timezone"`
 	SessionTimestamp int    `json:"session_timestamp"`
+	UserScreenWidth  int    `json:"user_screen_width"`
+	UserScreenHeight int    `json:"user_screen_height"`
+	EnterURL         string `json:"enter_url"`
 	Referrer         string `json:"referrer"`
 	SiteID           primitive.ObjectID
 }

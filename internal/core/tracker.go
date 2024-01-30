@@ -25,6 +25,8 @@ type Session struct {
 	ClientTimezone      string             `bson:"client_timezone"`
 	Duration            int                `bson:"duration"`
 	VisitorID           string             `bson:"visitor_id"`
+	Location            string             `bson:"location"`
+	EnterURL            string             `bson:"enter_url"`
 	UTMSource           string             `bson:"utm_source"`
 	UTMMedium           string             `bson:"utm_medium"`
 	UTMCampaign         string             `bson:"utm_campaign"`

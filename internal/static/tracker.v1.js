@@ -96,6 +96,14 @@ var GOtrika = {
     var session_id = localStorage.getItem("_GOtrika_session_id");
     return session_id;
   },
+  getEnterURL: function () {
+    var enterURL = localStorage.getItem("_GOtrika_session_enter_url");
+    if (enterURL === undefined) {
+      localStorage.setItem("_GOtrika_session_enter_url", window.location.href)
+      enterURL = window.location.href
+    }
+    return enterURL;
+  },
   getSessionTimestamp: function () {
     var session_timestamp = localStorage.getItem("_GOtrika_session_timestamp");
     return session_timestamp;
@@ -128,6 +136,7 @@ var GOtrika = {
     var tracker_data = {
       referrer: document.referrer,
       location: window.location.href,
+      enter_url: GOtrika.getEnterURL(),
       user_screen_width: screen.width,
       user_screen_height: screen.height,
       client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,

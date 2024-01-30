@@ -60,7 +60,7 @@ func NewServices(deps Dependencies) *Services {
 		Users:          NewUserService(deps.Repos.Users, deps.Hasher, deps.TokenManager),
 		Sites:          NewSiteService(deps.Repos.Sites),
 		TrackerService: NewTrackerService(deps.Repos.TrackerRepo),
-		Sessions:       NewSessionService(deps.Repos.Sessions),
+		Sessions:       NewSessionService(deps.Repos.Sessions, deps.Repos.TrackerRepo),
 		Events:         NewEventService(deps.Repos.Events, deps.Repos.TrackerRepo),
 	}
 }

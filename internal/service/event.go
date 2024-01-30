@@ -38,7 +38,10 @@ func (s *EventService) ParseTask(ctx context.Context, parseTaskDTO *dto.ParseTas
 	if err != nil {
 		return err
 	}
-	dtos := make([]dto.EventTaskDTO, len(parseTaskDTO.IDS))
+	if err := s.trackerRepo.ToWorkTrackerData(ctx, ids); err != nil {
+		return err
+	}
+	dtos := make([]dto.EventTaskDTO, len(rawEvents))
 	for index, rawEvent := range rawEvents {
 		var eventDTO dto.EventTaskDTO
 		err := json.Unmarshal(rawEvent.TrackerData, &eventDTO)
@@ -49,6 +52,11 @@ func (s *EventService) ParseTask(ctx context.Context, parseTaskDTO *dto.ParseTas
 		eventDTO.SiteID = rawEvent.SiteID
 		dtos[index] = eventDTO
 	}
-	err = s.repo.InsertManyEvents(ctx, dtos)
-	return err
+	if err := s.repo.InsertManyEvents(ctx, dtos); err != nil {
+		return err
+	}
+	if err := s.trackerRepo.ToParsedTrackerData(ctx, ids); err != nil {
+		return err
+	}
+	return nil
 }
