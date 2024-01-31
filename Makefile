@@ -14,5 +14,8 @@ run.session_worker:
 run.event_worker:
 	go run cmd/cli/main.go -app_type=event_worker
 
+compose.up:
+	docker-compose -f docker-compose.yml up
+
 swag:
 	swag init -g internal/bootstrap/app.go

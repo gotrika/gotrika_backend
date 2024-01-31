@@ -1,0 +1,57 @@
+version: "3.7"
+volumes:
+  mongodata: {}
+  rabbit-data: {}
+  rabbit-log: {}
+networks:
+  gotrika_network:
+services:
+  http: &app
+    image: gotrika_backend
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: always
+    env_file:
+      - .env.dev
+    networks:
+      - gotrika_network
+    command: ./app -app_type=http
+    depends_on:
+      - rabbitmq
+      - mongodb
+  session_worker:
+    <<: *app
+    command: ./app -app_type=session_worker
+  event_worker:
+    <<: *app
+    command: ./app -app_type=event_worker
+  scheduler:
+    <<: *app
+    command: ./app -app_type=scheduler
+  rabbitmq:
+    image: rabbitmq:3-management
+    networks:
+      - gotrika_network
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQ1"
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+      RABBITMQ_DEFAULT_VHOST: "/"
+      consumer_timeout: 31622400000
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 30s
+      retries: 5
+  mongodb:
+    image: mongo
+    networks:
+      - gotrika_network
+    environment:
+      PUID: 1000
+      PGID: 1000
+      MONGODB_DATABASE: "gotrika_db"
+    volumes:
+      - mongodata:/data/db
+    command: mongod --port 27018
